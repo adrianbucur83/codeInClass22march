@@ -1,38 +1,54 @@
 package org.example;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.ThreadLocalRandom;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+public class AppTest {
+    @Test
+    public void testCalculate() {
+        String[] operators = {"+", "-"};
+        DistanceUnit[] units = DistanceUnit.values();
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+        for (int i = 0; i < 100; i++) {
+            StringBuilder expression = new StringBuilder();
+            int result = 0;
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
+            // Generate random expression
+            for (int j = 0; j < 5; j++) {
+                int value = ThreadLocalRandom.current().nextInt(1, 100);
+                DistanceUnit unit = units[ThreadLocalRandom.current().nextInt(units.length)];
+                int term = value * unit.getMultiplier();
+
+                if (j > 0) {
+                    // Add operator
+                    String operator = operators[ThreadLocalRandom.current().nextInt(operators.length)];
+                    expression.append(" ").append(operator).append(" ");
+                    result += (operator.equals("+")) ? term : -term;
+                } else {
+                    result = term;
+                }
+
+                expression.append(value).append(" ").append(unit);
+            }
+
+            // Generate random output unit
+            DistanceUnit outputUnit = units[ThreadLocalRandom.current().nextInt(units.length)];
+
+            // Calculate expected result
+            int expected = DistanceCalculator.convertFromLowestUnit(result, outputUnit.getAbbreviation());
+
+            // Calculate actual result
+            int actual = DistanceCalculator.calculate(expression.toString(), outputUnit.toString());
+
+            System.out.println("Generated expression: " + expression);
+            // Check result
+           assertEquals(expected, actual, "Failed on expression: " + expression + " -> " + outputUnit);
+        }
     }
 }

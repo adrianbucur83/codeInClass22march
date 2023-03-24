@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class DistanceCalculator {
+
     private static final Map<String, Integer> UNIT_FACTORS = new HashMap<>() {{
         put("mm", 1);
         put("cm", 10);
@@ -40,25 +41,23 @@ public class DistanceCalculator {
                 sign = -1;
             } else if (UNIT_FACTORS.containsKey(token)) {
                 int value = Integer.parseInt(currentUnit) * sign;
-                result += convertToLowestUnit(value, currentUnit);
+                result += convertToLowestUnit(value);
                 currentUnit = "";
             } else {
                 currentUnit += token;
             }
         }
 
-        int value = Integer.parseInt(currentUnit) * sign;
-        result += convertToLowestUnit(value, currentUnit);
 
         return convertFromLowestUnit(result, outputUnit);
     }
 
-    private static int convertToLowestUnit(int value, String unit) {
-        int factor = UNIT_FACTORS.get(unit);
+    private static int convertToLowestUnit(int value) {
+        int factor = UNIT_FACTORS.get("mm");
         return value * factor;
     }
 
-    private static int convertFromLowestUnit(int value, String unit) {
+    public static int convertFromLowestUnit(int value, String unit) {
         int factor = UNIT_FACTORS.get(unit);
         return value / factor;
     }
