@@ -41,7 +41,7 @@ public class DistanceCalculator {
                 sign = -1;
             } else if (UNIT_FACTORS.containsKey(token)) {
                 int value = Integer.parseInt(currentUnit) * sign;
-                result += convertToLowestUnit(value);
+                result += convertToLowestUnit(value, token);
                 currentUnit = "";
             } else {
                 currentUnit += token;
@@ -52,8 +52,8 @@ public class DistanceCalculator {
         return convertFromLowestUnit(result, outputUnit);
     }
 
-    private static int convertToLowestUnit(int value) {
-        int factor = UNIT_FACTORS.get("mm");
+    private static int convertToLowestUnit(int value, String currentUnit) {
+        int factor = UNIT_FACTORS.get(currentUnit);
         return value * factor;
     }
 

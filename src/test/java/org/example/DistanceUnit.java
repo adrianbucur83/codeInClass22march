@@ -1,30 +1,24 @@
 package org.example;
 
-public enum DistanceUnit {
-    MILLIMETER("mm", 1),
-    CENTIMETER("cm", 10),
-    DECIMETER("dm", 100),
-    METER("m", 1000),
-    KILOMETER("km", 1000000);
-
-    private final String abbreviation;
-    private final int multiplier;
-
-    DistanceUnit(String abbreviation, int multiplier) {
-        this.abbreviation = abbreviation;
-        this.multiplier = multiplier;
+public class DistanceUnit {
+    public DistanceUnit(int sign, int distance, Unit unit) {
+        this.sign = sign;
+        this.distance = distance;
+        this.unit = unit;
     }
 
-    public String getAbbreviation() {
-        return abbreviation;
-    }
+    private int sign; // 1 or -1
+    private int distance;
+    private Unit unit;
 
-    public int getMultiplier() {
-        return multiplier;
+    public int calculateValueInMm() {
+        return distance * unit.multiplier * sign;
     }
 
     @Override
     public String toString() {
-        return abbreviation;
+        String opSign = sign == 1 ? "+" : "-";
+        return opSign + " " + distance + " " + unit.name().toLowerCase();
     }
+
 }
